@@ -1,61 +1,74 @@
 var config = require('../config/config'),
-    https = require('https');
+    request = require('request');;
 
 var apiKey = config.qpxKey;
  
-var body = {
-    "request": {
-    "passengers": { "adultCount": 1 },
-    "slice": [{
-        "origin": null,
-        "destination": null,
-        "date": null // YYYY-MM-DD 
-      }/*,
-      {
-        "origin": destination,
-        "destination": origin,
-        "date": returningDate // YYYY-MM-DD 
-      }*/
-    ]
+var qpx = {
+  request: {
+    passengers: {
+      kind: "qpxexpress#passengerCounts",
+      adultCount: 1,
+      childCount: 0
+    },
+    slice: [],
+    solutions:10
   }
 };
-var options = {
-    hostname: "googleapis.com",
-    path: "/qpxExpress/v1/trips/search?key="+apiKey,
-    method: 'POST', //POST,PUT,DELETE etc
-    port: 443,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-};
+var url = 'https://www.googleapis.com/qpxExpress/v1/trips/search?key='+apiKey;
 
 module.exports = {
   
-  search: function(from,to,date,callback){
+  search: function(payload,callback){
     
-    body.request.slice[0].origin = from;
-    body.request.slice[0].destination = to;
-    body.request.slice[0].date = date;
+    if (!payload || payload === null){
+      return calllback(new Error('QPX-Express : Empty payload'),null);
+    }
 
-    console.time("[QPX-EXPRESS] From "+from+" to "+to+" on "+date);
-    var req = https.request(options, function(response){
-      response.on('end',function(){
-        console.timeEnd("[QPX-EXPRESS] From "+from+" to "+to+" on "+date)
-      });
-      response.on('error', function(err){
-        return callback(err,null);
-      });
-      response.on('data', function (chunk) {
-        console.log('Response: ' + chunk);
-        var result = JSON.parse(chunk);
+    // PASSENGERS
+    qpx.request.passengers.adultCount = payload.adults || 1;
+    qpx.request.passengers.childCount = payload.children || 0;
 
-        return callback(null,result);
-      });
+    // SINGLE TRIP
+    qpx.request.slice.push({
+      origin: payload.from,
+      destination: payload.to,
+      date: payload.singleDate,
+      maxStops: 1
+    })
 
-    });
-    req.write(JSON.stringify(body));
-    req.end();
+    // RETURN TRIP
+    if (payload.return){
+      qpx.request.slice.push({
+        origin: payload.to,
+        destination: payload.from,
+        date: payload.returnDate,
+        maxStops: 1
+      })
+    }
+    console.time("[QPX-EXPRESS] From "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? " with return on "+payload.returnDate : "(one-way)"));
+    request({
+        url: url,
+        method: "POST",
+        headers: {
+            "content-type": "application/json",
+        },
+        body: JSON.stringify(qpx)
+    }, function (error, response, body) {
+        console.timeEnd("[QPX-EXPRESS] From "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? " with return on "+payload.returnDate : "(one-way)"));
+        if (!error && response.statusCode === 200) {
+            var results = [];
+            // console.log(response)
+            return callback(null,body);
+        }else {
+            console.log(response)
+            console.log("[QPX-EXPRESS] ERROR");
+            // console.log("[QPX-EXPRESS] response.statusCode: " + response.statusCode)
+            // console.log("[QPX-EXPRESS] response.statusText: " + response.body.error.message)
+            return callback(error,null)
+        }
+    })
   }
+
 
 };
  

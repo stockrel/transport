@@ -3,11 +3,14 @@ var express = require('express'),
   mongoose = require('mongoose'),
   Qpx = require('../connectors/qpx');
 
-router.get('/search/:from/:to/:date', function (req, res, next) {
-  var from = req.params.from;
-  var to = req.params.to;
-  var date = req.params.date;
-  Qpx.search(from, to, date,function (err, data) {
+router.post('/search', function (req, res, next) {
+  console.log(req.body)
+  if (!req.body || req.body == null || req.body == {}){
+    const err = new Error('Body not defined');
+    err.status = 400;
+    return next(err);
+  }
+  Qpx.search(req.body,function (err, data) {
     if (err) return next(err);
     res.status(200).send(data);
   });
