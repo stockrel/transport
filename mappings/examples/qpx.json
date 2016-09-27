@@ -1,0 +1,317 @@
+{
+  "kind": "qpxExpress#tripsSearch",
+  "trips": {
+    "kind": "qpxexpress#tripOptions",
+    "requestId": "nYdrHlvHZMLDyf4tn0P9bc",
+    "data": {
+      "kind": "qpxexpress#data",
+      "airport": [
+        {
+          "kind": "qpxexpress#airportData",
+          "code": "LYS",
+          "city": "LYS",
+          "name": "Lyon St-Exupery"
+        },
+        {
+          "kind": "qpxexpress#airportData",
+          "code": "SXB",
+          "city": "SXB",
+          "name": "Strasbourg Entzheim"
+        }
+      ],
+      "city": [
+        {
+          "kind": "qpxexpress#cityData",
+          "code": "LYS",
+          "name": "Lyon"
+        },
+        {
+          "kind": "qpxexpress#cityData",
+          "code": "SXB",
+          "name": "Strasbourg"
+        }
+      ],
+      "aircraft": [
+        {
+          "kind": "qpxexpress#aircraftData",
+          "code": "ER4",
+          "name": "Embraer ERJ-145"
+        }
+      ],
+      "tax": [
+        {
+          "kind": "qpxexpress#taxData",
+          "id": "IZ_001",
+          "name": "French Air Passenger Solidarity Tax"
+        },
+        {
+          "kind": "qpxexpress#taxData",
+          "id": "FR_007",
+          "name": "French Airport Tax"
+        },
+        {
+          "kind": "qpxexpress#taxData",
+          "id": "QW_001",
+          "name": "French Domestic Passenger Service Charge"
+        },
+        {
+          "kind": "qpxexpress#taxData",
+          "id": "UI_002",
+          "name": "French VAT Adjustment Tax"
+        },
+        {
+          "kind": "qpxexpress#taxData",
+          "id": "FR_001",
+          "name": "France Civil Aviation Tax Domestic And International"
+        }
+      ],
+      "carrier": [
+        {
+          "kind": "qpxexpress#carrierData",
+          "code": "A5",
+          "name": "HOP!"
+        },
+        {
+          "kind": "qpxexpress#carrierData",
+          "code": "AF",
+          "name": "Air France"
+        }
+      ]
+    },
+    "tripOption": [
+      {
+        "kind": "qpxexpress#tripOption",
+        "saleTotal": "EUR269.47",
+        "id": "20oKhGakLdJNGiRaySFcAA001",
+        "slice": [
+          {
+            "kind": "qpxexpress#sliceInfo",
+            "duration": 55,
+            "segment": [
+              {
+                "kind": "qpxexpress#segmentInfo",
+                "duration": 55,
+                "flight": {
+                  "carrier": "A5",
+                  "number": "4182"
+                },
+                "id": "GKbafq2wVRdEE0eZ",
+                "cabin": "COACH",
+                "bookingCode": "D",
+                "bookingCodeCount": 4,
+                "marriedSegmentGroup": "0",
+                "leg": [
+                  {
+                    "kind": "qpxexpress#legInfo",
+                    "id": "LtEj0xr+TmZ-cllg",
+                    "aircraft": "ER4",
+                    "arrivalTime": "2016-10-01T10:15+02:00",
+                    "departureTime": "2016-10-01T09:20+02:00",
+                    "origin": "LYS",
+                    "destination": "SXB",
+                    "originTerminal": "2",
+                    "duration": 55,
+                    "mileage": 228,
+                    "meal": "Refreshments"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "pricing": [
+          {
+            "kind": "qpxexpress#pricingInfo",
+            "fare": [
+              {
+                "kind": "qpxexpress#fareInfo",
+                "id": "Au6X/F3+1Ve8KT42xxy0Y+dH6c9QJd7+R3YtJWCm9OqNa",
+                "carrier": "A5",
+                "origin": "LYS",
+                "destination": "SXB",
+                "basisCode": "DWKWFR"
+              }
+            ],
+            "segmentPricing": [
+              {
+                "kind": "qpxexpress#segmentPricing",
+                "fareId": "Au6X/F3+1Ve8KT42xxy0Y+dH6c9QJd7+R3YtJWCm9OqNa",
+                "segmentId": "GKbafq2wVRdEE0eZ"
+              }
+            ],
+            "baseFareTotal": "EUR242.00",
+            "saleFareTotal": "EUR242.00",
+            "saleTaxTotal": "EUR27.47",
+            "saleTotal": "EUR269.47",
+            "passengers": {
+              "kind": "qpxexpress#passengerCounts",
+              "adultCount": 1
+            },
+            "tax": [
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "IZ_001",
+                "chargeType": "GOVERNMENT",
+                "code": "IZ",
+                "country": "FR",
+                "salePrice": "EUR1.13"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "UI_002",
+                "chargeType": "GOVERNMENT",
+                "code": "UI",
+                "country": "FR",
+                "salePrice": "EUR2.50"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "FR_007",
+                "chargeType": "GOVERNMENT",
+                "code": "FR",
+                "country": "FR",
+                "salePrice": "EUR9.85"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "QW_001",
+                "chargeType": "GOVERNMENT",
+                "code": "QW",
+                "country": "FR",
+                "salePrice": "EUR9.55"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "FR_001",
+                "chargeType": "GOVERNMENT",
+                "code": "FR",
+                "country": "FR",
+                "salePrice": "EUR4.44"
+              }
+            ],
+            "fareCalculation": "LYS A5 SXB 242.00DWKWFR EUR 242.00 END XT 14.29FR 1.13IZ 9.55QW 2.50UI",
+            "latestTicketingTime": "2016-09-30T12:48+00:00",
+            "ptc": "ADT"
+          }
+        ]
+      },
+      {
+        "kind": "qpxexpress#tripOption",
+        "saleTotal": "EUR269.47",
+        "id": "20oKhGakLdJNGiRaySFcAA002",
+        "slice": [
+          {
+            "kind": "qpxexpress#sliceInfo",
+            "duration": 55,
+            "segment": [
+              {
+                "kind": "qpxexpress#segmentInfo",
+                "duration": 55,
+                "flight": {
+                  "carrier": "AF",
+                  "number": "5483"
+                },
+                "id": "G4ZBRAYxsyLrblT6",
+                "cabin": "COACH",
+                "bookingCode": "L",
+                "bookingCodeCount": 6,
+                "marriedSegmentGroup": "0",
+                "leg": [
+                  {
+                    "kind": "qpxexpress#legInfo",
+                    "id": "LIdWnyn9u9bXVhqf",
+                    "aircraft": "ER4",
+                    "arrivalTime": "2016-10-01T10:15+02:00",
+                    "departureTime": "2016-10-01T09:20+02:00",
+                    "origin": "LYS",
+                    "destination": "SXB",
+                    "originTerminal": "2",
+                    "duration": 55,
+                    "operatingDisclosure": "OPERATED BY HOP!",
+                    "mileage": 228,
+                    "meal": "Refreshments"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "pricing": [
+          {
+            "kind": "qpxexpress#pricingInfo",
+            "fare": [
+              {
+                "kind": "qpxexpress#fareInfo",
+                "id": "AdclMZAipCvOGzSvQ6EfaA4EbrG3qmXb4gUPW0mq9prK+",
+                "carrier": "AF",
+                "origin": "LYS",
+                "destination": "SXB",
+                "basisCode": "LWKWFR"
+              }
+            ],
+            "segmentPricing": [
+              {
+                "kind": "qpxexpress#segmentPricing",
+                "fareId": "AdclMZAipCvOGzSvQ6EfaA4EbrG3qmXb4gUPW0mq9prK+",
+                "segmentId": "G4ZBRAYxsyLrblT6"
+              }
+            ],
+            "baseFareTotal": "EUR242.00",
+            "saleFareTotal": "EUR242.00",
+            "saleTaxTotal": "EUR27.47",
+            "saleTotal": "EUR269.47",
+            "passengers": {
+              "kind": "qpxexpress#passengerCounts",
+              "adultCount": 1
+            },
+            "tax": [
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "IZ_001",
+                "chargeType": "GOVERNMENT",
+                "code": "IZ",
+                "country": "FR",
+                "salePrice": "EUR1.13"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "UI_002",
+                "chargeType": "GOVERNMENT",
+                "code": "UI",
+                "country": "FR",
+                "salePrice": "EUR2.50"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "FR_007",
+                "chargeType": "GOVERNMENT",
+                "code": "FR",
+                "country": "FR",
+                "salePrice": "EUR9.85"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "QW_001",
+                "chargeType": "GOVERNMENT",
+                "code": "QW",
+                "country": "FR",
+                "salePrice": "EUR9.55"
+              },
+              {
+                "kind": "qpxexpress#taxInfo",
+                "id": "FR_001",
+                "chargeType": "GOVERNMENT",
+                "code": "FR",
+                "country": "FR",
+                "salePrice": "EUR4.44"
+              }
+            ],
+            "fareCalculation": "LYS AF SXB 242.00LWKWFR EUR 242.00 END XT 14.29FR 1.13IZ 9.55QW 2.50UI",
+            "latestTicketingTime": "2016-09-28T23:59+00:00",
+            "ptc": "ADT"
+          }
+        ]
+      }
+    ]
+  }
+}

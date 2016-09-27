@@ -1,7 +1,7 @@
 var config = require('../config/config'),
     request = require('request'),
     objectmapper = require("object-mapper"),
-    mapping = require('../mappings/qpx');;
+    mapping = require('../mappings/sncf');;
 
  
 var qpx = {
@@ -23,7 +23,7 @@ module.exports = {
   
   search: function(payload,callback){
     
-    if (!payload || payload === null){
+    /*if (!payload || payload === null){
       return calllback(new Error('QPX-Express : Empty payload'),null);
     }
 
@@ -50,7 +50,7 @@ module.exports = {
     }
     console.time("[QPX-EXPRESS] From "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? " with return on "+payload.returnDate : "(one-way)"));
     request({
-        url: config.qpx.host+config.qpx.path+'?key='+config.qpx.key,
+        url: config.sncf.host+config.sncf.path+'?key='+config.sncf.key,
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -69,7 +69,8 @@ module.exports = {
             console.log("[QPX-EXPRESS] ERROR");
             return callback(error,null)
         }
-    })
+    })*/
+    return {message:"not implemented"}
   }
 
 

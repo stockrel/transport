@@ -10,7 +10,16 @@ var config = {
     },
     port: process.env.PORT || 3000,
     db: 'mongodb://localhost/transport-development',
-    qpxKey: 'AIzaSyAw6YbY7ww697Q0HKmohcamH1-1q9YE8hY'
+    qpx: {
+      host: 'https://www.googleapis.com',
+      path: '/qpxExpress/v1/trips/search',
+      key: 'AIzaSyAw6YbY7ww697Q0HKmohcamH1-1q9YE8hY'
+    },
+    sncf: {
+      host: 'https://api.sncf.com',
+      path: '/v1/coverage/sncf/journeys',
+      key: 'ebc3da58-1361-4a35-9458-c183558be660'
+    }
   },
 
   test: {
@@ -20,7 +29,16 @@ var config = {
     },
     port: process.env.PORT || 3000,
     db: 'mongodb://localhost/transport-test',
-    qpxKey: 'AIzaSyAw6YbY7ww697Q0HKmohcamH1-1q9YE8hY'
+    qpx: {
+      host: 'https://www.googleapis.com',
+      path: '/qpxExpress/v1/trips/search',
+      key: 'AIzaSyAw6YbY7ww697Q0HKmohcamH1-1q9YE8hY'
+    },
+    sncf: {
+      host: 'https://api.sncf.com',
+      path: '/v1/coverage/sncf/journeys',
+      key: 'ebc3da58-1361-4a35-9458-c183558be660'
+    }
   },
 
   production: {
@@ -30,7 +48,16 @@ var config = {
     },
     port: process.env.PORT || 3000,
     db: 'mongodb://localhost/transport-production',
-    qpxKey: 'AIzaSyAw6YbY7ww697Q0HKmohcamH1-1q9YE8hY'
+    qpx: {
+      host: 'https://www.googleapis.com',
+      path: '/qpxExpress/v1/trips/search',
+      key: 'AIzaSyAw6YbY7ww697Q0HKmohcamH1-1q9YE8hY'
+    },
+    sncf: {
+      host: 'https://api.sncf.com',
+      path: '/v1/coverage/sncf/journeys',
+      key: 'ebc3da58-1361-4a35-9458-c183558be660'
+    }
   }
 };
 
