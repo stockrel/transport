@@ -1,7 +1,7 @@
 var config = require('../config/config'),
     request = require('request'),
     objectmapper = require("object-mapper"),
-    mapping = require('../mappings/qpx');;
+    mapping = require('../mappings/qpx');
 
  
 var qpx = {

@@ -19,6 +19,11 @@ var config = {
       host: 'https://api.sncf.com',
       path: '/v1/coverage/sncf/journeys',
       key: 'ebc3da58-1361-4a35-9458-c183558be660'
+    },
+    skyscanner: {
+      host: 'http://partners.api.skyscanner.net',
+      path: '/apiservices/pricing/v1.0/',
+      key: 'ch952559412449752472692137627450'
     }
   },
 
@@ -38,6 +43,11 @@ var config = {
       host: 'https://api.sncf.com',
       path: '/v1/coverage/sncf/journeys',
       key: 'ebc3da58-1361-4a35-9458-c183558be660'
+    },
+    skyscanner: {
+      host: 'http://partners.api.skyscanner.net',
+      path: '/apiservices/pricing/v1.0/',
+      key: 'ch952559412449752472692137627450'
     }
   },
 
@@ -57,6 +67,11 @@ var config = {
       host: 'https://api.sncf.com',
       path: '/v1/coverage/sncf/journeys',
       key: 'ebc3da58-1361-4a35-9458-c183558be660'
+    },
+    skyscanner: {
+      host: 'http://partners.api.skyscanner.net',
+      path: '/apiservices/pricing/v1.0/',
+      key: 'ch952559412449752472692137627450'
     }
   }
 };
