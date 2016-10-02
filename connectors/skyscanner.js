@@ -1,7 +1,9 @@
 var config = require('../config/config'),
     request = require('request'),
     objectmapper = require("object-mapper"),
-    mapping = require('../mappings/skyscanner');
+    mapping = require('../mappings/skyscanner'),
+    async = require('async'),
+    _ = require('lodash');
 
  
 var createSession = {
@@ -41,7 +43,72 @@ var pollSession = {
   excludecarriers: null
 }
 
+function getById(array,id){
+  return _.find(array,{ 'Id' : id})
+}
 
+_.mixin({
+  'findByValues': function(collection, property, values) {
+    return _.filter(collection, function(item) {
+      return _.contains(values, item[property]);
+    });
+  }
+});
+
+function populateSegment(segment, places, agents, carriers){
+  var result = {
+      "Id": segment.Id,
+      "OriginStation": _.find(places, { 'Id': segment.OriginStation } ),
+      "DestinationStation": _.find(places, { 'Id': segment.DestinationStation } ),
+      "DepartureDateTime": segment.DepartureDateTime,
+      "ArrivalDateTime": segment.ArrivalDateTime,
+      "Carrier": _.find(carriers, { 'Id': segment.Carrier } ),
+      "OperatingCarrier": _.find(carriers, { 'Id': segment.Carrier } ),
+      "Duration": segment.Duration,
+      "FlightNumber": segment.FlightNumber,
+      "JourneyMode": segment.JourneyMode,
+      "Directionality": segment.Directionality
+    }
+    return result;
+}
+
+function filterByArray(collections,filter){
+  return _.filter(collections, function(p){
+      return _.includes(filter, p.Id);
+  });
+}
+
+function populateLeg(leg, segments, places, agents, carriers){
+  var result = {
+      "Id": leg.Id,
+      "SegmentIds": filterByArray(segments,leg.SegmentIds),
+      "OriginStation": _.find(places, { 'Id': leg.OriginStation } ),
+      "DestinationStation": _.find(places, { 'Id': leg.DestinationStation } ),
+      "Departure": leg.Departure,
+      "Arrival": leg.Arrival,
+      "Duration": leg.Duration,
+      "JourneyMode": leg.JourneyMode,
+      "Stops": filterByArray(places,leg.Stops),
+      "Carriers": filterByArray(carriers,leg.Carriers),
+      "OperatingCarriers": filterByArray(carriers,leg.OperatingCarriers),
+      "Directionality": leg.Directionality,
+      "FlightNumbers": leg.FlightNumbers
+    }
+    return result;
+}
+
+function populateItinerary(itinerary, legs, places, agents, carriers, callback){
+    var result = itinerary;
+    result.OutboundLegId = _.find(legs, { 'Id': itinerary.OutboundLegId } );
+    result.InboundLegId = _.find(legs, { 'Id': itinerary.InboundLegId } );
+    async.forEach(itinerary.PricingOptions,function(price,callback){
+      price.Agents = filterByArray(agents,price.Agents);
+      callback();
+    },function(err){
+      if (err) return(err,null);
+      return callback(null,result);
+    })
+}
 
 
 module.exports = {
@@ -92,8 +159,56 @@ module.exports = {
                 if (!error && response.statusCode === 200) {
                     console.log("[SKYSCANNER] Session polled (from "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? ": return on "+payload.returnDate+")" : ": one-way)"));
                     
-                    console.log(body);
-                    return callback(null,JSON.parse(body))
+                    var result = JSON.parse(body);
+                    var places = result.Places;
+                    var agents = result.Agents;
+                    var carriers = result.Carriers;
+                    var legs = result.Legs;
+                    var segments = result.Segments;
+                    var itineraries = result.Itineraries;
+                    var populatedSegments = [];
+                    var populatedLegs = [];
+                    var populatedItineraries = [];
+
+                    console.log(result)
+
+                    async.forEach(segments,function(segment,callback){
+                      
+                      populatedSegments.push(populateSegment(segment,places,agents,carriers));
+
+                      callback();
+                    },function(err){
+                      if (err)  return callback(err,null);
+
+                      async.forEach(legs,function(leg,callback){
+                      
+                        populatedLegs.push(populateLeg(leg, populatedSegments, places, agents, carriers));
+
+                        callback();
+                      },function(err){
+                        if (err)  return callback(err,null);
+
+                        async.forEach(itineraries,function(itinerary,callback){
+                          // console.log(itinerary)
+                          populateItinerary(itinerary, populatedLegs, places, agents, carriers, function(err,result){
+                            if (err) return callback(err,null);
+                            populatedItineraries.push(result);
+                            callback();
+                          });
+
+                          
+                        },function(err){
+                          if (err)  return callback(err,null);
+                          var fullResult = {
+                            query : result.Query,
+                            flights : populatedItineraries
+                          }
+                          return callback(null,fullResult)
+                        })
+                      })
+                    })
+                    
+                    
                 } else if (!error && response.statusCode === 410) {
                     console.log("[SKYSCANNER] SESSION EXPIRED (need to recreate a session)");
                     return callback(error,null)

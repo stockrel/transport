@@ -6,10 +6,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var cors = require('cors');
 var routes = require('./routes/index');
 var users = require('./routes/user');
 var flights = require('./routes/flight');
+
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 app.use('/', routes);
 app.use('/users', users);
@@ -48,6 +50,16 @@ app.use(function(req, res, next) {
 // will print stacktrace
 
 if (app.get('env') === 'development') {
+
+    app.use(function(req, res, next) {
+        //res.header('Access-Control-Allow-Origin', 'http://chain-backoffice.elasticbeanstalk.com');
+        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.header('Access-Control-Allow-Credentials',true);
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,x-jwt-token,Content-Type,title,latitude,type,longitude,punchline,commentsrestricted,tag,actionbutton,logo,actionbuttondestination');
+        next();
+    })
+
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
@@ -68,6 +80,15 @@ app.use(function(err, req, res, next) {
         title: 'error'
     });
 });
+
+app.use(function(req, res, next) {
+        //res.header('Access-Control-Allow-Origin', 'http://chain-backoffice.elasticbeanstalk.com');
+        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.header('Access-Control-Allow-Credentials',true);
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,x-jwt-token,Content-Type,title,latitude,type,longitude,punchline,commentsrestricted,tag,actionbutton,logo,actionbuttondestination');
+        next();
+    })
 
 
 module.exports = app;
