@@ -30,4 +30,17 @@ router.post('/search/skyscanner', function (req, res, next) {
   });
 });
 
+router.post('/browse/skyscanner', function (req, res, next) {
+  console.log(req.body)
+  if (!req.body || req.body == null || req.body == {}){
+    const err = new Error('Body not defined');
+    err.status = 400;
+    return next(err);
+  }
+  Skyscanner.browseDays(req.body,function (err, data) {
+    if (err) return next(err);
+    res.status(200).json(data);
+  });
+});
+
 module.exports = router;

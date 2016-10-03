@@ -3,7 +3,9 @@ var config = require('../config/config'),
     objectmapper = require("object-mapper"),
     mapping = require('../mappings/skyscanner'),
     async = require('async'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    moment = require('moment');
+require('moment-range');
 
  
 var createSession = {
@@ -128,6 +130,8 @@ module.exports = {
     createSession.destinationplace = payload.to;
     createSession.outbounddate = payload.singleDate;
 
+    // CABIN CLASS
+    createSession.cabinclass = payload.cabinClass || "Economy";
 
     // RETURN TRIP
     if (payload.return){
@@ -136,13 +140,17 @@ module.exports = {
     //TODO: do not create a session each time, but for each user then use same session for different searches
     console.time("[SKYSCANNER] From "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? " with return on "+payload.returnDate : "(one-way)"));
     request.post({
-        url: config.skyscanner.host+config.skyscanner.path,
+        url: config.skyscanner.host+config.skyscanner.search_path,
         form: createSession
     }, function (error, response, body) {
         console.timeEnd("[SKYSCANNER] From "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? " with return on "+payload.returnDate : "(one-way)"));
         if (!error && response.statusCode === 201) {
+
             var sessionID = response.headers.location.split('/')[response.headers.location.split('/').length-1];
             var pollURL = response.headers.location;
+
+            pollSession.stops = payload.stops || 1;
+
             console.log("[SKYSCANNER] Session created (from "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? ": return on "+payload.returnDate+")" : ": one-way)"),
             ": session's identifier is "+sessionID);
             
@@ -223,8 +231,61 @@ module.exports = {
             return callback(error,null)
         }
     })
-  }
+  },
 
+  browseDays: function(payload,callback){
+    
+    if (!payload || payload === null){
+      return calllback(new Error('Skyscanner : Empty payload'),null);
+    }
+
+    //BEGINNING OF URL TO BROWSE FLIGHTS
+    var browse_url = config.skyscanner.host + config.skyscanner.browse_path + '/FR/EUR/fr/' + payload.from + '/' + payload.to + '/'
+
+
+    // CONTRUCT DATES RANGES
+    console.log("[SKYSCANNER][BROWSING] Browsing dates +/- "+(payload.flexible ? payload.flexible : 5)+" days "+(payload.flexible ? "(payload)" : "(default)"));
+    var startSingle = moment(payload.singleDate, "YYYY-MM-DD").add(-(payload.flexible ? payload.flexible : 5),'days');
+    var endSingle = moment(payload.singleDate, "YYYY-MM-DD").add((payload.flexible ? payload.flexible : 5),'days');
+    var rangeSingle = moment.range(startSingle, endSingle);
+
+    if (payload.return && payload.return != undefined){
+      var startReturn = moment(payload.returnDate, "YYYY-MM-DD").add(-(payload.flexible ? payload.flexible : 5),'days');
+      var endReturn = moment(payload.returnDate, "YYYY-MM-DD").add((payload.flexible ? payload.flexible : 5),'days');
+      var rangeReturn = moment.range(startReturn, endReturn);
+    }
+
+    var quotes = [];
+    var cpt = 0;
+    async.eachSeries(rangeSingle.toArray('days'),function(singleDate,callback){    
+     
+      var datepart = moment(singleDate).format("YYYY-MM-DD");
+      if (payload.return){
+        datepart += '/' + moment(rangeReturn.toArray('days')[cpt]).format("YYYY-MM-DD");
+      }
+      console.log(cpt)
+      console.time("[SKYSCANNER][BROWSING] From "+payload.from+" to "+payload.to+" on "+moment(singleDate).format("YYYY-MM-DD")+(payload.return ? " with return on "+moment(rangeReturn.toArray('days')[cpt]).format("YYYY-MM-DD") : "(one-way)"));
+      request.get({
+          url: browse_url + datepart + '?apiKey='+config.skyscanner.key
+      }, function (error, response, body) {
+          console.timeEnd("[SKYSCANNER][BROWSING] From "+payload.from+" to "+payload.to+" on "+moment(singleDate).format("YYYY-MM-DD")+(payload.return ? " with return on "+moment(rangeReturn.toArray('days')[cpt]).format("YYYY-MM-DD") : "(one-way)"));
+          if (!error && response.statusCode === 200) {
+              quotes = _.concat(quotes,JSON.parse(body).Quotes);
+              cpt++;
+              callback();
+          }else {
+              console.log("[SKYSCANNER] ERROR "+response.statusCode);
+              cpt++;
+              callback();
+          }
+      })
+    },function(err){
+      if (err) return callback(err,null);
+
+      return callback(null,quotes);
+    })
+  }
+  
 
 };
  

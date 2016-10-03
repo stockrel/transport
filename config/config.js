@@ -22,7 +22,8 @@ var config = {
     },
     skyscanner: {
       host: 'http://partners.api.skyscanner.net',
-      path: '/apiservices/pricing/v1.0/',
+      search_path: '/apiservices/pricing/v1.0/',
+      browse_path: '/apiservices/browsequotes/v1.0/',
       key: 'ch952559412449752472692137627450'
     }
   },
@@ -46,7 +47,8 @@ var config = {
     },
     skyscanner: {
       host: 'http://partners.api.skyscanner.net',
-      path: '/apiservices/pricing/v1.0/',
+      search_path: '/apiservices/pricing/v1.0/',
+      browse_path: '/apiservices/browsequotes/v1.0/',
       key: 'ch952559412449752472692137627450'
     }
   },
@@ -70,7 +72,8 @@ var config = {
     },
     skyscanner: {
       host: 'http://partners.api.skyscanner.net',
-      path: '/apiservices/pricing/v1.0/',
+      search_path: '/apiservices/pricing/v1.0/',
+      browse_path: '/apiservices/browsequotes/v1.0/',
       key: 'ch952559412449752472692137627450'
     }
   }
