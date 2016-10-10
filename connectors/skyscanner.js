@@ -80,6 +80,12 @@ function filterByArray(collections,filter){
   });
 }
 
+function filterByCode(collections,filter){
+  return _.filter(collections, function(p){
+      return _.includes(filter, p.Code);
+  });
+}
+
 function populateLeg(leg, segments, places, agents, carriers){
   var result = {
       "Id": leg.Id,
@@ -164,10 +170,11 @@ module.exports = {
                 qs: pollSession
             }, function (error, response, body) {
 
-                if (!error && response.statusCode === 200) {
+                if (!error && (response.statusCode === 200 || response.statusCode === 304)) {
                     console.log("[SKYSCANNER] Session polled (from "+payload.from+" to "+payload.to+" on "+payload.singleDate+(payload.return ? ": return on "+payload.returnDate+")" : ": one-way)"));
                     
                     var result = JSON.parse(body);
+                    console.log(result)
                     var places = result.Places;
                     var agents = result.Agents;
                     var carriers = result.Carriers;
@@ -178,7 +185,6 @@ module.exports = {
                     var populatedLegs = [];
                     var populatedItineraries = [];
 
-                    console.log(result)
 
                     async.forEach(segments,function(segment,callback){
                       
@@ -208,6 +214,7 @@ module.exports = {
                         },function(err){
                           if (err)  return callback(err,null);
                           var fullResult = {
+                            currency : filterByCode(result.Currencies,result.Query.Currency),
                             query : result.Query,
                             flights : populatedItineraries
                           }
